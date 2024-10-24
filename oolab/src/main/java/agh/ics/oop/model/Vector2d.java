@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+// mozna uzyc public record dla Vector2d
 public class Vector2d {
     private final int x;
     private final int y;
@@ -30,28 +31,23 @@ public class Vector2d {
     }
 
     public Vector2d add(Vector2d other) {
-        Vector2d result = new Vector2d(x + other.x, y + other.y);
-        return result;
+        return new Vector2d(x + other.x, y + other.y);
     }
 
     public Vector2d subtract(Vector2d other) {
-        Vector2d result = new Vector2d(x - other.x, y - other.y);
-        return result;
+        return new Vector2d(x - other.x, y - other.y);
     }
 
-    public Vector2d upperRight(Vector2d other) {
-        Vector2d result = new Vector2d(x, y + other.y);
-        return result;
+    public Vector2d upperRight(Vector2d other){
+        return new Vector2d(Math.max(this.x, other.x), Math.max(this.y, other.y));
     }
 
     public Vector2d lowerLeft(Vector2d other) {
-        Vector2d result = new Vector2d(x, y - other.y);
-        return result;
+        return new Vector2d(Math.min(this.x, other.x), Math.min(this.y, other.y));
     }
 
     public Vector2d opposite() {
-        Vector2d result = new Vector2d(-x, -y);
-        return result;
+        return new Vector2d(-x, -y);
     }
 
     public boolean equals(Object other) {
