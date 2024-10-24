@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import java.util.Objects;
+
 // mozna uzyc public record dla Vector2d
 public class Vector2d {
     private final int x;
@@ -58,5 +60,9 @@ public class Vector2d {
 
         Vector2d that = (Vector2d) other;
         return x == that.x && y == that.y;
+    }
+
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }
