@@ -8,23 +8,22 @@ import agh.ics.oop.model.WorldMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
-    private final List<Animal> animals = new ArrayList<>();
+public class Simulation<T, P> {
+    private final List<T> animals;
     private final List<MoveDirection> moveList;
-    private final WorldMap map;
+    private final WorldMap<T, P> map;
 
-    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> moveList, WorldMap map) {
+    public Simulation(List<T> animals, List<MoveDirection> moveList, WorldMap<T, P> map) {
         this.map = map;
-        for (Vector2d position : animalPositions) {
-            Animal placeAnimal = new Animal(position);
-            if(map.place(placeAnimal)) {
-                this.animals.add(placeAnimal);
-            }
-        }
+        this.animals = animals;
         this.moveList = moveList;
+
+        for (T animal : animals) {
+            map.place(animal);
+        }
     }
 
-    public List<Animal> getAnimals() {
+    public List<T> getAnimals() {
         return animals;
     }
 
@@ -33,7 +32,7 @@ public class Simulation {
         System.out.println(map);
         for (int i = 0; i < moveList.size(); i++) {
             int currentAnimalIndex = i % animalCount;
-            Animal currentAnimal = animals.get(currentAnimalIndex);
+            T currentAnimal = animals.get(currentAnimalIndex);
             map.move(currentAnimal, moveList.get(i));
             System.out.println(map);
         }
