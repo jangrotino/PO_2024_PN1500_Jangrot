@@ -24,14 +24,14 @@ public class Animal {
 
     @Override
     public String toString() {
-        return "Animal [direction=" + direction + ", position=" + position.toString() + "]";
+        return direction.toString();
     }
 
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
 
-    public void move(MoveDirection direction) {
+    public void move(MoveDirection direction, MoveValidator validator) {
         switch (direction) {
             case RIGHT:
                 this.direction = this.direction.next();
@@ -43,18 +43,18 @@ public class Animal {
 
             case FORWARD:
                 Vector2d unitVec1 = this.direction.toUnitVector();
-                this.position = this.position.add(unitVec1);
-                this.position = this.position.lowerLeft(new Vector2d(4, 4));
-                this.position = this.position.upperRight(new Vector2d(0, 0));
+                if (validator.canMoveTo(position.add(unitVec1))) {
+                    position = position.add(unitVec1);
+                }
                 break;
 
             case BACKWARD:
                 Vector2d unitVec2 = this.direction.toUnitVector();
-                this.position = this.position.subtract(unitVec2);
-                this.position = this.position.lowerLeft(new Vector2d(4, 4));
-                this.position = this.position.upperRight(new Vector2d(0, 0));
+                if (validator.canMoveTo(position.subtract(unitVec2))) {
+                    position = position.subtract(unitVec2);
+                }
                 break;
-                
+
             default:
                 break;
         }
