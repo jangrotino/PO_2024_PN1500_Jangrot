@@ -2,7 +2,7 @@ package agh.ics.oop.model;
 
 import java.util.Objects;
 
-// mozna uzyc public record dla Vector2d
+// można użyć public record dla Vector2d
 public class Vector2d {
     private final int x;
     private final int y;
@@ -55,10 +55,9 @@ public class Vector2d {
     public boolean equals(Object other) {
         if(this == other)
             return true;
-        if(!(other instanceof Vector2d))
+        if(!(other instanceof Vector2d that))
             return false;
 
-        Vector2d that = (Vector2d) other;
         return x == that.x && y == that.y;
     }
 
