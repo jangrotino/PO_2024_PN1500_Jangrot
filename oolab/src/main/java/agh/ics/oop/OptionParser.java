@@ -6,26 +6,26 @@ import java.util.List;
 
 public class OptionParser {
 
-    static List<MoveDirection> parser(String[] args) {
+    static List<MoveDirection> parser(String[] args) throws IllegalArgumentException {
         List<MoveDirection> moveDirections = new ArrayList<>();
 
         for (String arg : args) {
-            switch (arg) {
-                case "l":
-                    moveDirections.add(MoveDirection.LEFT);
-                    break;
-                case "r":
-                    moveDirections.add(MoveDirection.RIGHT);
-                    break;
-                case "b":
-                    moveDirections.add(MoveDirection.BACKWARD);
-                    break;
-                case "f":
-                    moveDirections.add(MoveDirection.FORWARD);
-                    break;
-                default:
-                    break;
-            }
+                switch (arg) {
+                    case "l":
+                        moveDirections.add(MoveDirection.LEFT);
+                        break;
+                    case "r":
+                        moveDirections.add(MoveDirection.RIGHT);
+                        break;
+                    case "b":
+                        moveDirections.add(MoveDirection.BACKWARD);
+                        break;
+                    case "f":
+                        moveDirections.add(MoveDirection.FORWARD);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Nieznany kierunek ruchu: " + arg);
+                }
         }
 
         return moveDirections;

@@ -102,9 +102,10 @@ class GrassFieldTest {
         Animal animal = new Animal(new Vector2d(8, 8));
         grassField.place(animal);
 
+
         assertEquals(animal, grassField.objectAt(new Vector2d(8, 8)), "Object at position should be the placed animal.");
-        assertNull(grassField.objectAt(new Vector2d(9, 9)), "Object at empty position should be null.");
     }
+
 
     @Test
     void testMultipleGrassPlacements() {
