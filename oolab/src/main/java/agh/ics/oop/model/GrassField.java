@@ -1,19 +1,13 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 
-public class GrassField implements WorldMap {
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
+import java.util.*;
+
+public class GrassField extends AbstractWorldMap {
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
-    private Vector2d lowerBound = null;
-    private Vector2d upperBound = null;
-    private final MapVisualizer map;
 
     public GrassField(int grassFieldNumber) {
-        map = new MapVisualizer(this);
         grassPlacing(grassFieldNumber);
     }
 
@@ -26,13 +20,8 @@ public class GrassField implements WorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        return !isOccupied(position);
-    }
-
-    @Override
     public boolean place(Animal animal) {
-        if(canMoveTo(animal.getPosition()) && animals.putIfAbsent(animal.getPosition(), animal) == null) {
+        if(super.place(animal)) {
             this.bordersChange(animal.getPosition());
             return true;
         }
@@ -40,6 +29,7 @@ public class GrassField implements WorldMap {
     }
 
     private void grassPlacing(int grassFieldNumber) {
+        /*
         Random random = new Random();
         int maxVal = (int) Math.sqrt(grassFieldNumber * 10);
         while(grasses.size() < grassFieldNumber) {
@@ -51,51 +41,38 @@ public class GrassField implements WorldMap {
                 bordersChange(newVec);
             }
         }
-    }
-
-    @Override
-    public void move(Animal animal, MoveDirection direction) {
-        Vector2d startPosition = animal.getPosition();
-
-        if (animal == objectAt(startPosition)) {
-            animal.move(direction, this);
-
-            Vector2d newPosition = animal.getPosition();
-            this.bordersChange(newPosition);
-            if (!startPosition.equals(newPosition)) {
-                animals.remove(startPosition);
-                animals.put(newPosition, animal);
-            }
+         */
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator((int) Math.sqrt(10 * grassFieldNumber), (int) Math.sqrt(10 * grassFieldNumber), grassFieldNumber);
+        for (Vector2d grassPosition : randomPositionGenerator) {
+            grasses.put(grassPosition, new Grass(grassPosition));
+            bordersChange(grassPosition);
         }
     }
 
     @Override
-    public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
+    public void move(Animal animal, MoveDirection direction) {
+        super.move(animal, direction);
+        this.bordersChange(animal.getPosition());
     }
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        if (isOccupied(position)) {
-            return animals.get(position);
+        if(super.objectAt(position) != null) {
+            return super.objectAt(position);
         }
         return grasses.get(position);
     }
 
     private void bordersChange(Vector2d position) {
-        if(lowerBound == null || upperBound == null) {
-            lowerBound = position;
-            upperBound = position;
-        }
-        else if(position.precedes(lowerBound)) {
-            lowerBound = position;
-        }
-        else if(position.follows(upperBound)) {
-            upperBound = position;
-        }
+        lowerBound = lowerBound.lowerLeft(position);
+        upperBound = upperBound.upperRight(position);
     }
 
-    public String toString() {
-        return map.draw(lowerBound, upperBound);
+
+    @Override
+    public List<WorldElement> getElements() {
+        var elements = super.getElements();
+        elements.addAll(grasses.values());
+        return elements;
     }
 }
