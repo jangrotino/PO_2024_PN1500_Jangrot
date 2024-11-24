@@ -12,9 +12,25 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected final MapVisualizer map;
     private List<MapChangeListener> mapChangeListeners = new ArrayList<>();
+    private static final String animalMoveMessage = "zwierzę ruszyło się na pole: ";
+    private static final String animalPlaceMessage = "zwierzę zostało umieszczone na polu: ";
 
     public AbstractWorldMap() {
         map = new MapVisualizer(this);
+    }
+
+    public void subscribe(MapChangeListener listener) {
+        mapChangeListeners.add(listener);
+    }
+
+    public void unsubscribe(MapChangeListener listener) {
+        mapChangeListeners.remove(listener);
+    }
+
+    private void mapChanged(String message) {
+        for (MapChangeListener listener : mapChangeListeners) {
+            listener.mapChanged(this, message);
+        }
     }
 
     @Override
@@ -25,6 +41,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public boolean place(Animal animal) throws IncorrectPositionException {
         if (canMoveTo(animal.getPosition()) && animals.putIfAbsent(animal.getPosition(), animal) == null) {
+            this.mapChanged(animalPlaceMessage + animal.getPosition());
             return true;
         }
         else{
@@ -40,6 +57,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
             Vector2d newPosition = animal.getPosition();
             if (!startPosition.equals(newPosition)) {
+                this.mapChanged(animalMoveMessage + newPosition);
                 animals.remove(startPosition);
                 animals.put(newPosition, animal);
             }

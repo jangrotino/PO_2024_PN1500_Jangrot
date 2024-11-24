@@ -40,7 +40,6 @@ public class Simulation {
             int currentAnimalIndex = i % animalCount;
             Animal currentAnimal = animals.get(currentAnimalIndex);
             map.move(currentAnimal, moveList.get(i));
-            System.out.println(map);
         }
     }
 }

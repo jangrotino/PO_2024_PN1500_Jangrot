@@ -9,29 +9,43 @@ import static agh.ics.oop.OptionParser.parser;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OptionParserTest {
-    @Test
-    void OptionParserArray() {
-        //given
-        String[] args1 = {", ", " ", "l", "r", "b", "f", "a", "c ", "igor"}; //mix
-        String[] args2 = {"x"}; // wrong list
-        String[] args3 = {"l", "l"}; // all valid left
-        String[] args4 = {"r", "r"}; // all valid right
-        String[] args5 = {"f", "f"}; // all valid forward
-        String[] args6 = {"b", "b"}; // all valid backward
-        //OptionParser parser = new OptionParser();
-        List<MoveDirection> expected1 = List.of(MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.FORWARD);
-        List<MoveDirection> expected2 = List.of();
-        List<MoveDirection> expected3 = List.of(MoveDirection.LEFT, MoveDirection.LEFT);
-        List<MoveDirection> expected4 = List.of(MoveDirection.RIGHT, MoveDirection.RIGHT);
-        List<MoveDirection> expected5 = List.of(MoveDirection.FORWARD, MoveDirection.FORWARD);
-        List<MoveDirection> expected6 = List.of(MoveDirection.BACKWARD, MoveDirection.BACKWARD);
 
-        //then
-        assertIterableEquals(expected1, parser(args1));
-        assertIterableEquals(expected2, parser(args2));
-        assertIterableEquals(expected3, parser(args3));
-        assertIterableEquals(expected4, parser(args4));
-        assertIterableEquals(expected5, parser(args5));
-        assertIterableEquals(expected6, parser(args6));
+    @Test
+    void testValidArguments() {
+        // Valid argument cases
+        String[] args1 = {"l", "r", "b", "f"}; // mix of valid directions
+        String[] args2 = {"l", "l"};           // all left
+        String[] args3 = {"r", "r"};           // all right
+        String[] args4 = {"f", "f"};           // all forward
+        String[] args5 = {"b", "b"};           // all backward
+
+        List<MoveDirection> expected1 = List.of(MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.FORWARD);
+        List<MoveDirection> expected2 = List.of(MoveDirection.LEFT, MoveDirection.LEFT);
+        List<MoveDirection> expected3 = List.of(MoveDirection.RIGHT, MoveDirection.RIGHT);
+        List<MoveDirection> expected4 = List.of(MoveDirection.FORWARD, MoveDirection.FORWARD);
+        List<MoveDirection> expected5 = List.of(MoveDirection.BACKWARD, MoveDirection.BACKWARD);
+
+        // Assertions
+        assertIterableEquals(expected1, parser(args1), "Valid mixed directions should be parsed correctly.");
+        assertIterableEquals(expected2, parser(args2), "Valid left directions should be parsed correctly.");
+        assertIterableEquals(expected3, parser(args3), "Valid right directions should be parsed correctly.");
+        assertIterableEquals(expected4, parser(args4), "Valid forward directions should be parsed correctly.");
+        assertIterableEquals(expected5, parser(args5), "Valid backward directions should be parsed correctly.");
+    }
+
+    @Test
+    void testInvalidArguments() {
+        // Invalid argument cases
+        String[] args1 = {",", " ", "a", "c", "igor"}; // all invalid arguments
+        String[] args2 = {"x"};                       // single invalid argument
+        String[] args3 = {"l", "x", "f"};             // mixed valid and invalid arguments
+
+        // Assertions for exceptions
+        assertThrows(IllegalArgumentException.class, () -> parser(args1),
+                "Invalid arguments should throw IllegalArgumentException.");
+        assertThrows(IllegalArgumentException.class, () -> parser(args2),
+                "Single invalid argument should throw IllegalArgumentException.");
+        assertThrows(IllegalArgumentException.class, () -> parser(args3),
+                "Mixed valid and invalid arguments should throw IllegalArgumentException.");
     }
 }
