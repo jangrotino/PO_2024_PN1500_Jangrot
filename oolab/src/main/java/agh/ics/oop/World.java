@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import javafx.application.Application;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class World {
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
         Simulation simulation = new Simulation(positions, directions);
         simulation.run();
+
+         */
         System.out.println("system wystartowal");
 
         List<MoveDirection> directions = OptionParser.parser(args);
@@ -46,7 +49,7 @@ public class World {
         simulation.run();
 
         System.out.println("system zakonczyl dzialanie");
-         */
+        /*
         List<MoveDirection> directions = parser(args);
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
         List<Simulation> simulations = new ArrayList<>();
@@ -59,10 +62,12 @@ public class World {
         }
 
         SimulationEngine engine = new SimulationEngine(simulations);
-        engine.runSync();
+        engine.runAsyncInThreadPool();
         System.out.println("system zakonczyl dzialanie");
-    }
+         */
 
+        //Application.launch(SimulationApp.class, args);
+}
     static void run(MoveDirection[] args){
         System.out.println("Start");
         for(MoveDirection argument : args){
